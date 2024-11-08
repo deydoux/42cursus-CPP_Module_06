@@ -38,8 +38,25 @@ int ScalarConverter::convertChar(const std::string &input)
 	return (EXIT_SUCCESS);
 }
 
+int ScalarConverter::convertInt(const std::string &input) {
+	if (input.find('.') != std::string::npos || input == "+inff" || input == "-inff")
+		return (EXIT_FAILURE);
+	std::stringstream ss(input);
+	int i;
+	ss >> i;
+	if (!ss.eof() || ss.fail())
+		std::cerr << "Int conversion impossible" << std::endl;
+	else {
+		printChar(static_cast<char>(i));
+		std::cout << "int: " << static_cast<int>(i) << std::endl
+			<< "float: " << static_cast<float>(i) << 'f' << std::endl
+			<< "double: " << static_cast<double>(i) << std::endl;
+	}
+	return (EXIT_SUCCESS);
+}
+
 int ScalarConverter::convertFloat(const std::string &input) {
-	if (input.empty() || input.back() != 'f')
+	if (input.empty() || input.back() != 'f' || input == "+inf" || input == "-inf")
 		return (EXIT_FAILURE);
 	std::stringstream ss(input.substr(0, input.size() - 1));
 	float f;
@@ -71,7 +88,5 @@ int ScalarConverter::convertDouble(const std::string &input) {
 }
 
 int ScalarConverter::convert(const std::string &input) {
-	if (input == "+inf" || input == "-inf")
-		return (convertDouble(input));
-	return (!convertChar(input) || !convertFloat(input) || !convertDouble(input));
+	return (!convertChar(input) || !convertInt(input) || !convertFloat(input) || !convertDouble(input));
 }

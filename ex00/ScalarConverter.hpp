@@ -8,6 +8,7 @@ class ScalarConverter {
 private:
 	static void printChar(char c);
 	static int convertChar(const std::string &input);
+	static int convertInt(const std::string &input);
 	static int convertFloat(const std::string &input);
 	static int convertDouble(const std::string &input);
 public:
