@@ -24,23 +24,45 @@ void ScalarConverter::printChar(char c) {
 		std::cout << "char: Non displayable" << std::endl;
 }
 
+void ScalarConverter::printInt(int i) {
+	std::cout << "int: " << i << std::endl;
+}
+
+void ScalarConverter::printFloat(float f) {
+	std::cout << "float: " << std::fixed << std::setprecision(1) << f << 'f' << std::endl;
+}
+
+void ScalarConverter::printDouble(double d) {
+	std::cout << "double: " << std::fixed << std::setprecision(1) << d << std::endl;
+}
+
+bool ScalarConverter::isLiteral(const std::string &input) {
+	return (input == "inf" || input == "+inf" || input == "-inf" || input == "nan");
+}
+
+bool ScalarConverter::isLiteralF(const std::string &input) {
+	return (isLiteral(input) || input == "inff" || input == "+inff" || input == "-inff" || input == "nanf");
+}
+
 int ScalarConverter::convertChar(const std::string &input)
 {
+	std::cout << "char" << std::endl;
 	if (input.size() != 1 || std::isdigit(input[0]))
-		return (EXIT_FAILURE);
+		return (1);
 	std::stringstream ss(input);
 	char c;
 	ss >> c;
 	printChar(static_cast<char>(c));
-	std::cout << "int: " << static_cast<int>(c) << std::endl
-		<< "float: " << static_cast<float>(c) << 'f' << std::endl
-		<< "double: " << static_cast<double>(c) << std::endl;
-	return (EXIT_SUCCESS);
+	printInt(static_cast<int>(c));
+	printFloat(static_cast<float>(c));
+	printDouble(static_cast<double>(c));
+	return (0);
 }
 
 int ScalarConverter::convertInt(const std::string &input) {
-	if (input.find('.') != std::string::npos || input == "+inff" || input == "-inff")
-		return (EXIT_FAILURE);
+	std::cout << "int" << std::endl;
+	if (input.find('.') != std::string::npos || isLiteralF(input))
+		return (1);
 	std::stringstream ss(input);
 	int i;
 	ss >> i;
@@ -48,43 +70,43 @@ int ScalarConverter::convertInt(const std::string &input) {
 		std::cerr << "Int conversion impossible" << std::endl;
 	else {
 		printChar(static_cast<char>(i));
-		std::cout << "int: " << static_cast<int>(i) << std::endl
-			<< "float: " << static_cast<float>(i) << 'f' << std::endl
-			<< "double: " << static_cast<double>(i) << std::endl;
+		printInt(static_cast<int>(i));
+		printFloat(static_cast<float>(i));
+		printDouble(static_cast<double>(i));
 	}
-	return (EXIT_SUCCESS);
+	return (0);
 }
 
 int ScalarConverter::convertFloat(const std::string &input) {
-	if (input.empty() || input.back() != 'f' || input == "+inf" || input == "-inf")
-		return (EXIT_FAILURE);
-	std::stringstream ss(input.substr(0, input.size() - 1));
-	float f;
-	ss >> f;
-	if (!ss.eof() || ss.fail())
+	std::cout << "float" << std::endl;
+	if (input.empty() || input[input.size() - 1] != 'f' || isLiteral(input))
+		return (1);
+	char *end;
+	float f = static_cast<float>(std::strtod(input.substr(0, input.size() - 1).c_str(), &end));
+	if (*end) {
 		std::cerr << "Float conversion impossible" << std::endl;
-	else {
-		printChar(static_cast<char>(f));
-		std::cout << "int: " << static_cast<int>(f) << std::endl
-			<< "float: " << f << 'f' << std::endl
-			<< "double: " << static_cast<double>(f) << std::endl;
+		return (0);
 	}
-	return (EXIT_SUCCESS);
+	printChar(static_cast<char>(f));
+	printInt(static_cast<int>(f));
+	printFloat(static_cast<float>(f));
+	printDouble(static_cast<double>(f));
+	return (0);
 }
 
 int ScalarConverter::convertDouble(const std::string &input) {
-	std::stringstream ss(input);
-	double d;
-	ss >> d;
-	if (!ss.eof() || ss.fail())
+	std::cout << "double" << std::endl;
+	char *end;
+	double d = std::strtod(input.c_str(), &end);
+	if (*end) {
 		std::cerr << "Double conversion impossible" << std::endl;
-	else {
-		printChar(static_cast<char>(d));
-		std::cout << "int: " << static_cast<int>(d) << std::endl
-			<< "float: " << static_cast<float>(d) << 'f' << std::endl
-			<< "double: " << d << std::endl;
+		return (0);
 	}
-	return (EXIT_SUCCESS);
+	printChar(static_cast<char>(d));
+	printInt(static_cast<int>(d));
+	printFloat(static_cast<float>(d));
+	printDouble(static_cast<double>(d));
+	return (0);
 }
 
 int ScalarConverter::convert(const std::string &input) {
