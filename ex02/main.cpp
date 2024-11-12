@@ -1,3 +1,6 @@
+#include <cstdlib>
+#include <ctime>
+#include <typeinfo>
 #include "A.hpp"
 #include "B.hpp"
 #include "C.hpp"
