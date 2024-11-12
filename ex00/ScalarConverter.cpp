@@ -44,9 +44,7 @@ bool ScalarConverter::isLiteralF(const std::string &input) {
 	return (isLiteral(input) || input == "inff" || input == "+inff" || input == "-inff" || input == "nanf");
 }
 
-int ScalarConverter::convertChar(const std::string &input)
-{
-	std::cout << "char" << std::endl;
+int ScalarConverter::convertChar(const std::string &input) {
 	if (input.size() != 1 || std::isdigit(input[0]))
 		return (1);
 	std::stringstream ss(input);
@@ -60,7 +58,6 @@ int ScalarConverter::convertChar(const std::string &input)
 }
 
 int ScalarConverter::convertInt(const std::string &input) {
-	std::cout << "int" << std::endl;
 	if (input.find('.') != std::string::npos || isLiteralF(input))
 		return (1);
 	std::stringstream ss(input);
@@ -78,7 +75,6 @@ int ScalarConverter::convertInt(const std::string &input) {
 }
 
 int ScalarConverter::convertFloat(const std::string &input) {
-	std::cout << "float" << std::endl;
 	if (input.empty() || input[input.size() - 1] != 'f' || isLiteral(input))
 		return (1);
 	char *end;
@@ -95,7 +91,6 @@ int ScalarConverter::convertFloat(const std::string &input) {
 }
 
 int ScalarConverter::convertDouble(const std::string &input) {
-	std::cout << "double" << std::endl;
 	char *end;
 	double d = std::strtod(input.c_str(), &end);
 	if (*end) {
